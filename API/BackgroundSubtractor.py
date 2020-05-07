@@ -1,3 +1,10 @@
+"""
+This file is not working at the moment. It is file that I get on internet, 
+probably pyimagesearch. It meant to subtract background. It works with 
+videos. but not with images yet. """
+
+
+
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt

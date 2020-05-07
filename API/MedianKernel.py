@@ -1,9 +1,13 @@
+"""Thia file produces filtered images with median
+filter. Got from pythonimagesearch"""
+
+
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 import os
 
-filenames = ['Data/' + format(fil) for fil in os.listdir('Data/')]
+filenames = ['Data/' + format(file) for file in os.listdir('Data/')]
 
 for i in filenames:
     img = cv.imread(i)

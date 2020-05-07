@@ -10,7 +10,7 @@ from skimage.feature import hog
 from skimage import data, exposure
 
 
-image = cv.imread("iron-nut-250x250.jpeg")
+image = cv.imread("Data/im_pi_cut.png")
 
 fd, hog_image = hog(image, orientations=8, pixels_per_cell=(16, 16),
                     cells_per_block=(1, 1), visualize=True, multichannel=True)
