@@ -1,6 +1,6 @@
 """
 Implemets histogram of gradients on given image.
-Taken from internet, source information needs to be added.
+https://scikit-image.org/docs/dev/auto_examples/features_detection/plot_hog.html
 """
 
 

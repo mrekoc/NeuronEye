@@ -1,5 +1,4 @@
-# USAGE
-# python distance_to_camera.py
+"""https://www.pyimagesearch.com/2015/01/19/find-distance-camera-objectmarker-using-python-opencv/"""
 
 # import the necessary packages
 from imutils import paths
