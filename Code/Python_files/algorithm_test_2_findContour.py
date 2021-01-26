@@ -5,6 +5,7 @@ import numpy as np
 import cv2 as cv
 import os
 from scipy import ndimage as nd
+import time
 
 
 plt.rcParams['figure.figsize'] = [12, 8]
@@ -92,4 +93,6 @@ def main():
 
 
 if __name__ == '__main__':
+    start = time.process_time()
     main()
+    print(time.process_time() - start)

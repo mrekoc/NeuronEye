@@ -9,6 +9,7 @@ import matplotlib.colors as clr
 import numpy as np 
 import cv2 as cv
 import os
+import time
 
 plt.rcParams['figure.figsize'] = [12, 8]
 plt.rcParams['figure.dpi'] = 100 
@@ -108,8 +109,9 @@ def main():
 
 
 if __name__ == '__main__':
+    start = time.process_time()
     main()
-
+    print(time.process_time() - start)
 # In[ ]:
 
 
