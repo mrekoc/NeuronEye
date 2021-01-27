@@ -1,0 +1,13 @@
+roi_1.png 4
+roi_2.png 6
+roi_3.png 17
+screws_005.png 1
+screws_006.png 2
+screws_009.png 2
+screws_021.png 7
+screws_037.png 6
+screws_047.png 3
+screws_075.png 5
+screws_084.png 7
+screws_375.png 6
+ting_roi.png 28
