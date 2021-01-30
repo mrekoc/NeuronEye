@@ -10,7 +10,7 @@ def read_imgs(folder_name):
     imgs = []
     files = []
     folder = folder_name
-
+    
     for filename in sorted(os.listdir(folder)):
         img = cv.imread(os.path.join(folder,filename))
         if img is not None:
@@ -18,8 +18,6 @@ def read_imgs(folder_name):
             img = cv.resize(img, (480, 360))
             imgs.append(img)
             files.append(filename)
-
-    #np.savetxt("../test_data/bases.txt", files, newline="\n", fmt = "%s")
 
     return imgs, files
 
@@ -99,7 +97,7 @@ def find_contour(img, target):
     fidelity = False
     fidelityValue = 1.7
     detected = img.copy()
-    _, c, h = cv.findContours(target, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    c, h = cv.findContours(target, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     fidelityRange = 0
     if fidelity:
         maxArea = .0
@@ -156,7 +154,9 @@ def blob_detection(img, target):
 def hough_circles(img, target):
     copy = img.copy()
     size = (np.max(target))/16
-    circles = cv.HoughCircles(target, cv.HOUGH_GRADIENT, 1.5, size, param1=300, param2=25, minRadius=0,maxRadius=50)
+    if size <= 0:
+        size = 1
+    circles = cv.HoughCircles(target, cv.HOUGH_GRADIENT, 1, size, param1=21, param2=6, minRadius=5,maxRadius=21)
     num = 0
     
     if circles is not None:
@@ -187,24 +187,45 @@ def f1_measure(base, total):
     elif total < base:
         tp = total
         fn = base - total
-    score = tp / (tp + (0.5) * (fp + fn))
+    
+    if base == 0 and (fp+fn) == 0:
+        score = 1
+    else:
+        score = tp / (tp + (0.5) * (fp + fn))
         
     return score
     
-def example_implementation():
-    imgs, files = read_imgs("../test_data")
-    #np.savetxt("../test_data/bases.txt", files, newline="\n", fmt = "%s")
-    values = read_values("../test_data/bases.txt")
+def show_results(img):
+    #fig, axs = plt.subplots(1,2)
+    #axs[0].imshow(img, cmap = 'gray')
+    #axs[0].set_title('Original image')
+    plt.imshow(final, cmap = 'gray')
+    plt.set_title('Image w/ detected objects')
+
+def example_implementation(folder, value_file):
+    
+    imgs, files = read_imgs(folder)
+    values = read_values(value_file)
+    
     threshes = morph_saturation(imgs)
+    
     finals = []
     totals = []
     scores = []
+    anomalies = []
+    
     for (img, thresh, file, value) in zip(imgs, threshes, files, values):
+        
         total, final = blob_detection(img, thresh)
         score = f1_measure(value, total)
+        
+        if score < 0.750:
+            anomalies.append(file)
+        
         scores.append(score)
         finals.append(final)
         totals.append(total)
+        
         #fig, axs = plt.subplots(1,2)
         #axs[0].imshow(img, cmap = 'gray')
         #axs[0].set_title('Original image')
@@ -212,11 +233,20 @@ def example_implementation():
         #axs[1].set_title('Image w/ detected objects')
 
         #print("Filename:" , file, "Detected objects:", total)
-
+        
+    average_success = np.sum(scores) / len(scores)
     save = zip(files, imgs, threshes, finals, values, totals, scores)
     
-    return save
+    return save, average_success
 
-#save = example_implementation()
+#folder = "../../../dataset/training"
+#value_file = folder + "/bases.txt"
+
+#save, rate = example_implementation(folder, value_file)
+
 #for file, img, thresh, final, value, total, score in save:
 #    print(file, total, value, score)
+
+#print("\n ######## \n ######## \n Average success in this batch: %5.3f \n" % (rate))
+
+#show_results(save[3][5])
