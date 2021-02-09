@@ -66,7 +66,7 @@ def saturation_process(imgs):
 
         blur = cv.GaussianBlur(dilation, (3,3), 0)
 
-        gaus = cv.Canny(blur,250,255)
+        gaus = cv.Canny(blur,50,225) #250-255
         gaus = cv.dilate(gaus, kernel, iterations = 1)
         gaus = cv.erode(gaus, kernel, iterations = 1)
         
@@ -156,7 +156,7 @@ def hough_circles(img, target):
     size = (np.max(target))/16
     if size <= 0:
         size = 1
-    circles = cv.HoughCircles(target, cv.HOUGH_GRADIENT, 1, size, param1=21, param2=6, minRadius=5,maxRadius=21)
+    circles = cv.HoughCircles(target, cv.HOUGH_GRADIENT, 1, size, param1=21, param2=12, minRadius=5,maxRadius=21) #param2 = 6
     num = 0
     
     if circles is not None:
@@ -178,6 +178,24 @@ def f1_measure(base, total):
     fp = 0
     fn = 0
     score = 0
+    recall = 0
+    precision = 0
+    
+    if base == 0 and total == 0:
+        score = 1
+        recall = 1
+        precision = 1
+        return score, recall, precision
+    elif base == 0 and total != 0:
+        score = 0
+        recall = 0
+        precision = 0
+        return score, recall, precision
+    elif base != 0 and total == 0:
+        score = 0
+        recall = 0
+        precision = 0
+        return score, recall, precision
     
     if base==total:
         tp = total
@@ -185,15 +203,15 @@ def f1_measure(base, total):
         tp = base
         fp = total - base
     elif total < base:
-        tp = total
+        tp = totals
         fn = base - total
     
-    if base == 0 and (fp+fn) == 0:
-        score = 1
-    else:
-        score = tp / (tp + (0.5) * (fp + fn))
-        
-    return score
+    score = tp / (tp + (0.5) * (fp + fn))
+    precision = tp / (tp+fp)
+    recall = tp / (tp+fn)
+    
+    
+    return score, recall, precision
     
 def show_results(img):
     #fig, axs = plt.subplots(1,2)
